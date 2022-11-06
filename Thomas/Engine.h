@@ -4,6 +4,9 @@
 #include "Thomas.h"
 #include "Bob.h"
 #include "LevelManager.h"
+#include "SoundManager.h"
+#include "HUD.h"
+#include "ParticleSystem.h"
 
 using namespace sf;
 class Engine
@@ -12,12 +15,23 @@ private:
 	// The texture holder
 	TextureHolder th;
 
+	// create a particle system
+	ParticleSystem m_PS;
+
 	// Thomas and his friend, Bob
 	Thomas m_Thomas;
 	Bob m_Bob;
 
 	// A class to manage all the levels
 	LevelManager m_LM;
+
+	// Create a SoundManager
+	SoundManager m_SM;
+
+	// The Hud
+	Hud m_Hud;
+	int m_FramesSinceLastHUDUpdate = 0;
+	int m_TargetFramesPerHUDUpdate = 500;
 
 	const int TILE_SIZE = 50;
 	const int VERTS_IN_QUAD = 4;
@@ -38,6 +52,10 @@ private:
 	// for the background
 	Sprite m_BackgroundSprite;
 	Texture m_BackgroundTexture;
+
+	// Declare a shader for the background
+	Shader m_RippleShader;
+
 	// Is the game currently playing?
 	bool m_Playing = false;
 	// Is character 1 or 2 the current focus?
@@ -67,6 +85,12 @@ private:
 	void loadLevel();
 
 	bool detectCollisions(PlayableCharacter& character);
+
+	// Make a vector of the best places to emit sounds from
+	void populateEmitters(vector <Vector2f>& vSoundEmitters,
+		int** arrayLevel);
+	// A vector of Vector2f for the fire emitter locations
+	vector <Vector2f> m_FireEmitters;
 
 public:
 	// The Engine constructor
